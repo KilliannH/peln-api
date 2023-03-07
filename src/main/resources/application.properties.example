@@ -15,8 +15,7 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
 spring.jpa.hibernate.ddl-auto= update
 
 #custom properties
-token.cookieName=peln
-token.secret=secret
+token.secret=a512bitsKey (or run openssl rand -hex 64)
 token.exp=86400000
 
 #swagger

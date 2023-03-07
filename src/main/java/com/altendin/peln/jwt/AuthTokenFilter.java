@@ -1,5 +1,6 @@
 package com.altendin.peln.jwt;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +30,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
             try {
                 String jwt = parseJwt(request);
-                if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+                if (jwtUtils.validateJwtToken(jwt)) {
                     String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -51,7 +52,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         private String parseJwt(HttpServletRequest request) {
-            String jwt = jwtUtils.getJwtFromCookies(request);
-            return jwt;
+            String tokenHeader = request.getHeader("Authorization");
+            if(tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+                throw new JwtException("No Bearer prefix found");
+            }
+            return tokenHeader.substring(7);
         }
 }
