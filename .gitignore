@@ -5,7 +5,8 @@ target/
 !**/src/test/**/target/
 
 application.properties
-init.sql
+testdb.mv.db
+testdb.trace.db
 
 ### STS ###
 .apt_generated

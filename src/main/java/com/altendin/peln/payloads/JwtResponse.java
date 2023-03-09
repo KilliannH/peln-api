@@ -1,7 +1,5 @@
 package com.altendin.peln.payloads;
 
-import com.altendin.peln.models.User;
-
 import java.io.Serializable;
 import java.util.List;
 

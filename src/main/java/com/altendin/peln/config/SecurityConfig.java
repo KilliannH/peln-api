@@ -1,7 +1,7 @@
 package com.altendin.peln.config;
 
 import com.altendin.peln.jwt.AuthEntryPointJwt;
-import com.altendin.peln.jwt.AuthTokenFilter;
+import com.altendin.peln.jwt.JwtFilter;
 import com.altendin.peln.jwt.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,34 +10,31 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
-@EnableGlobalMethodSecurity(
-        // securedEnabled = true,
-        // jsr250Enabled = true,
-        prePostEnabled = true)
+@EnableMethodSecurity()
 public class SecurityConfig {
     @Value("${spring.h2.console.path}")
     private String h2ConsolePath;
+
+    @Value("${security.enabled:true}")
+    private Boolean securityEnabled;
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
-
-    @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
-    }
+    private AuthEntryPointJwt authenticationEntryPoint;
+    @Autowired
+    private JwtFilter filter;
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -55,26 +52,32 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> {
+            if (!securityEnabled) {
+                web.ignoring().requestMatchers("**");
+            }
+        };
+    }
+
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeHttpRequests().requestMatchers("/signup", "/login", "/signout").permitAll()
-                .requestMatchers("/api/test/**").permitAll()
+        http.cors().and()
+                .csrf().disable()
+                .authorizeHttpRequests().requestMatchers("/signup", "/login").permitAll()
                 .requestMatchers(h2ConsolePath + "/**").permitAll()
-                .anyRequest().authenticated();
-
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
         // fix H2 database console: Refused to display ' in a frame because it set 'X-Frame-Options' to 'deny'
         http.headers().frameOptions().sameOrigin();
-
         http.authenticationProvider(authenticationProvider());
-
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

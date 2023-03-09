@@ -14,8 +14,12 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
 spring.jpa.hibernate.ddl-auto= update
 
+#use to test api without credentials
+security.enabled=true
+
 #custom properties
-token.secret=a512bitsKey (or run openssl rand -hex 64)
+token.secret=a Base64 encoded 512bits(or more) Key
+#easily generate one by running "openssl rand -hex 64"
 token.exp=86400000
 
 #swagger
