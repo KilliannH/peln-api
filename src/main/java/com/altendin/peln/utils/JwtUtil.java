@@ -1,5 +1,6 @@
-package com.altendin.peln.jwt;
+package com.altendin.peln.utils;
 
+import com.altendin.peln.jwt.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -12,8 +13,8 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
-public class JwtUtils {
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+public class JwtUtil {
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     @Value("${token.secret}")
     private String jwtSecret;

@@ -22,5 +22,13 @@ token.secret=a Base64 encoded 512bits(or more) Key
 #easily generate one by running "openssl rand -hex 64"
 token.exp=86400000
 
+#be careful with the basedir, from target it's ../../, from API_Bloom it's ../, etc
+bloom.relativePath=../bloom/
+bloom.pythonScriptName=use_bloom_sequential_v2.1.py
+bloom.pythonGlobalVariable=python3
+
+#allow other connections to h2 console
+spring.h2.console.settings.web-allow-others=true
+
 #swagger
 spring.mvc.pathmatch.matching-strategy=ANT_PATH_MATCHER

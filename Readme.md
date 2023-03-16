@@ -1,11 +1,14 @@
-# Introduction
-An API to communicate with Bloom.
-R&D [WIP] Project
+// TODO -- check when security is disabled (requests are still secured)
+
+# Introduction 
+An API to communicate with Bloom model.
 
 Spring Boot Application using in-memory H2 database
 Spring security
 Spring Data JPA
 Spring Boot 3.0.4
+
+Swagger UI Documentation using OpenAPI 3
 
 JWT Token based auth with Roles elevation
 H2-ui to access in memory db
@@ -16,7 +19,7 @@ Java 17
 1.	Copy resources/application.properties.example to resources/application.properties
 2.	Change the appropriate values (ex: token.secret needs to be at least a 512bytes key)
 3.	make sure you have Java 17 installed and setup in your project structure and Maven
-4.	mvn clean
+4.	mvn clean 
 5.  mvn install
 6.  Run the application
 7.  testdb.mv.db and testdb.trace.db files will be created at basedir (document based db for persistence)
@@ -27,14 +30,8 @@ Java 17
 
 # Build and Test
 make sure you have maven and Java configured in your $PATH
-```nvm clean install```
-to build a jarfile ```nvm package```
-to run jarfile ```java -jar ./path-to-.jar```
+```mvn clean install```
+to build a jarfile ```mvn install```
+to run jarfile ```java -jar ./target/apibloom-0.0.1-SNAPSHOT.jar```
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better.
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+API doc is available at ${host}:${port}/swagger-ui/index.html
