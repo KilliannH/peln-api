@@ -1,5 +1,3 @@
-// TODO -- check when security is disabled (requests are still secured)
-
 # Introduction 
 An API to communicate with Bloom model.
 
