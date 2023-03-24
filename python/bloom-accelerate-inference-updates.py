@@ -3,7 +3,6 @@ import time
 import torch
 import math
 from werkzeug.wrappers import Request, Response
-import json
 import os
 from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM
 from dotenv import load_dotenv, find_dotenv
@@ -98,9 +97,8 @@ def application(request):
     if request.method == 'POST' and request.path == '/test':
         # Parse params
         # {"inputs": "..", {parameters: "max_new_tokens": 10, "..."}}
-        body = request.data.decode('utf-8')
-
-        json_values = json.loads(body)
+        json_values = request.get_json()
+        print("body", json_values)
 
         do_sample = None
         early_stopping = None
