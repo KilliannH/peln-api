@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,9 +22,6 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
-
-    @Value("${security.enabled:true}")
-    private Boolean securityEnabled;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -52,7 +48,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (JwtException e) {
-            if(securityEnabled)
             logger.debug("Bearer prefix not found in token", request.getPathInfo());
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e);
